@@ -1,10 +1,10 @@
 from collections import Counter
 
 def solution(phone_book):
-    phone_book.sort()
-
-    for i in range(len(phone_book) - 1):
-        if phone_book[i + 1].startswith(phone_book[i]):
+    book = list(Counter(sorted(phone_book)))
+    
+    for n1, n2 in zip(book, book[1:]):
+        if n2.startswith(n1):
             return False
-
+    
     return True
