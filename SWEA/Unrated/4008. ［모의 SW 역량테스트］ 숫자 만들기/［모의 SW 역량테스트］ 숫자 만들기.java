@@ -1,121 +1,86 @@
-/**
- * 아이디어 :
- * 1. 조합을 이용해서 모든 연산 경우의 수를 구함
- * 2.
- * 시간 : 271 ms
- * 메모리 : 75,424 kb
- * 난이도 : 중 (구현 자체는 무난하게 할 수 있었는데, 시간 제한에 안걸리게 최적화 하는 아이디어가 안 떠올랐습니다.)
- */
-
 import java.io.*;
 import java.util.*;
 
 public class Solution {
     static int N;
-    static int [] numbers;
-    static char [] selectedOperator;
-    static int [] opCounts;
-    static List<Integer> result;
+    static int[] numbers;
+    static char[] selectedOperator;
+    static int[] opCounts = new int[4]; // +, -, *, / 순서
+    static int minResult;
+    static int maxResult;
 
-    static void calc() {
-        ArrayDeque<Integer> numDeque = new ArrayDeque<>();
-        ArrayDeque<Character> operatorDeque = new ArrayDeque<>();
-
-        for (int number : numbers) {
-            numDeque.addLast(number);
+    static char getOpChar(int idx) {
+        switch (idx) {
+            case 0: return '+';
+            case 1: return '-';
+            case 2: return '*';
+            case 3: return '/';
+            default: throw new IllegalArgumentException();
         }
+    }
 
-        for (char c : selectedOperator) {
-            operatorDeque.addLast(c);
-        }
-
-        while(!operatorDeque.isEmpty()) {
-            int a = numDeque.removeFirst();
-            int b = numDeque.removeFirst();
-            char op = operatorDeque.removeFirst();
-            int result = 0;
-
+    static void calculate() {
+        int result = numbers[0];
+        
+        for (int i = 0; i < N-1; i++) {
+            char op = selectedOperator[i];
+            int num = numbers[i+1];
+            
             switch (op) {
-                case '+':
-                    result = a + b;
-                    break;
-                case '-':
-                    result = a - b;
-                    break;
-                case '*':
-                    result = a * b;
-                    break;
-                case '/':
-                    result = a / b;
-                    break;
+                case '+': result += num; break;
+                case '-': result -= num; break;
+                case '*': result *= num; break;
+                case '/': result /= num; break;
             }
-
-            numDeque.addFirst(result);
         }
-
-        result.add(numDeque.removeFirst());
+        
+        minResult = Math.min(minResult, result);
+        maxResult = Math.max(maxResult, result);
     }
 
-    static char getOp(int i) {
-        if (i == 0)
-            return '+';
-        else if (i == 1)
-            return '-';
-        else if (i == 2)
-            return '*';
-        else
-            return '/';
-    }
-
-    static void backtrack(int cnt) {
-        if (cnt == N-1) {
-            calc();
+    static void backtrack(int depth) {
+        if (depth == N-1) {
+            calculate();
             return;
         }
-
+        
         for (int i = 0; i < 4; i++) {
-            if (opCounts[i] == 0)
-                continue;
-
+            if (opCounts[i] == 0) continue;
+            
             opCounts[i]--;
-            selectedOperator[cnt] = getOp(i);
-            backtrack(cnt + 1);
+            selectedOperator[depth] = getOpChar(i);
+            backtrack(depth + 1);
             opCounts[i]++;
         }
     }
 
     public static void main(String[] args) throws IOException {
-        StringBuilder sb = new StringBuilder();
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringBuilder sb = new StringBuilder();
         int T = Integer.parseInt(br.readLine());
-
+        
         for (int tc = 1; tc <= T; tc++) {
             N = Integer.parseInt(br.readLine());
-            opCounts = new int[4];
-            selectedOperator = new char[N-1];
-            result = new ArrayList<>();
             numbers = new int[N];
-
+            selectedOperator = new char[N-1];
+            
             StringTokenizer st = new StringTokenizer(br.readLine());
-
-            for (int i = 0; i < 4; i++) {
-                int count = Integer.parseInt(st.nextToken());
-                opCounts[i] = count;
-            }
-
+            opCounts[0] = Integer.parseInt(st.nextToken()); // +
+            opCounts[1] = Integer.parseInt(st.nextToken()); // -
+            opCounts[2] = Integer.parseInt(st.nextToken()); // *
+            opCounts[3] = Integer.parseInt(st.nextToken()); // /
+            
             st = new StringTokenizer(br.readLine());
-
             for (int i = 0; i < N; i++) {
                 numbers[i] = Integer.parseInt(st.nextToken());
             }
-
+            
+            minResult = Integer.MAX_VALUE;
+            maxResult = Integer.MIN_VALUE;
             backtrack(0);
-
-            Collections.sort(result);
-            int diff = Math.abs(result.get(0) - result.get(result.size()-1));
-            sb.append("#").append(tc).append(" ").append(diff).append("\n");
+            
+            sb.append("#").append(tc).append(" ").append(maxResult - minResult).append("\n");
         }
-
-        System.out.println(sb);
+        System.out.print(sb);
     }
 }
