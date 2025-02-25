@@ -1,9 +1,17 @@
+/**
+ * 아이디어 :
+ * 1. 조합을 이용해서 모든 연산 경우의 수를 구함
+ * 2.
+ * 시간 : 271 ms
+ * 메모리 : 75,424 kb
+ * 난이도 : 중 (구현 자체는 무난하게 할 수 있었는데, 시간 제한에 안걸리게 최적화 하는 아이디어가 안 떠올랐습니다.)
+ */
+
 import java.io.*;
 import java.util.*;
 
 public class Solution {
     static int N;
-    static char [] operators;
     static int [] numbers;
     static char [] selectedOperator;
     static int [] opCounts;
@@ -59,7 +67,7 @@ public class Solution {
             return '/';
     }
 
-    static void perm(int cnt) {
+    static void backtrack(int cnt) {
         if (cnt == N-1) {
             calc();
             return;
@@ -71,7 +79,7 @@ public class Solution {
 
             opCounts[i]--;
             selectedOperator[cnt] = getOp(i);
-            perm(cnt + 1);
+            backtrack(cnt + 1);
             opCounts[i]++;
         }
     }
@@ -101,7 +109,7 @@ public class Solution {
                 numbers[i] = Integer.parseInt(st.nextToken());
             }
 
-            perm(0);
+            backtrack(0);
 
             Collections.sort(result);
             int diff = Math.abs(result.get(0) - result.get(result.size()-1));
