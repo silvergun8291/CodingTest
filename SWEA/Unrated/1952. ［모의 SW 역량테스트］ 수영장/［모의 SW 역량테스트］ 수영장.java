@@ -2,8 +2,7 @@ import java.util.*;
 import java.io.*;
 
 public class Solution {
-    static int [] plans;
-    static boolean [] visited;
+    static int [] plans;                // 12개월 이용 계획
     static int [] passes;
     static int [] prices;
     static List<Integer> totalPrices;
@@ -31,7 +30,6 @@ public class Solution {
 
         for (int tc = 1; tc <= T; tc++) {
             plans = new int[12];
-            visited = new boolean[4];
             passes = new int[] {1, 1, 3, 12};
             prices = new int[4];
             totalPrices = new ArrayList<>();
