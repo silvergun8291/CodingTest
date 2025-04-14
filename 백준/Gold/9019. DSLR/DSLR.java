@@ -44,41 +44,28 @@ public class Main {
             if (current == B)
                 return operator;
 
-            for (int i = 0; i < 4; i++) {
-                switch (i) {
-                    case 0:
-                        int d = D(current);
-
-                        if (visited[d]) continue;
-
-                        visited[d] = true;
-                        queue.offer(new DSLR(d, operator + "D"));
-                        break;
-                    case 1:
-                        int s = S(current);
-
-                        if (visited[s]) continue;
-
-                        visited[s] = true;
-                        queue.offer(new DSLR(s, operator + "S"));
-                        break;
-                    case 2:
-                        int l = L(current);
-
-                        if (visited[l]) continue;
-
-                        visited[l] = true;
-                        queue.offer(new DSLR(l, operator + "L"));
-                        break;
-                    case 3:
-                        int r = R(current);
-
-                        if (visited[r]) continue;
-
-                        visited[r] = true;
-                        queue.offer(new DSLR(r, operator + "R"));
-                        break;
-                }
+            int d = D(current);
+            if (!visited[d]) {
+                visited[d] = true;
+                queue.offer(new DSLR(d, operator + "D"));
+            }
+            
+            int s = S(current);
+            if (!visited[s]) {
+                visited[s] = true;
+                queue.offer(new DSLR(s, operator + "S"));
+            }
+            
+            int l = L(current);
+            if (!visited[l]) {
+                visited[l] = true;
+                queue.offer(new DSLR(l, operator + "L"));
+            }
+            
+            int r = R(current);
+            if (!visited[r]) {
+                visited[r] = true;
+                queue.offer(new DSLR(r, operator + "R"));
             }
         }
 
